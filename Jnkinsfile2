@@ -1,0 +1,72 @@
+pipeline {
+    agent any 
+
+    tools {
+        maven 'njob'
+    }
+
+    stages {
+        stage('Build Info') {
+            steps {
+                echo "Build started: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+                notifyBuild('STARTED')   // <-- send STARTED notification here
+            }
+        }
+
+        stage('Checkout') { 
+            steps {
+                git branch: 'dev', 
+                    credentialsId: '047e0051-21a4-419a-8217-f8c646580ad9',
+                    url: 'https://github.com/dilipdevopsj/we.git'
+            }
+        }
+
+        stage('Build') { 
+            steps {
+                sh "mvn clean package"
+            }
+        }
+
+        stage('SonarQube') {
+            steps {
+                sh "mvn sonar:sonar"
+            }
+        }
+
+        stage('Nexus Deploy') {
+            steps {
+                sh "mvn deploy"
+            }
+        }
+
+        stage('Deploy To Tomcat') {
+            steps {
+                echo "Deploying WAR file using curl..."
+                sh """
+                    curl -u sai:dd \
+                    --upload-file /var/lib/jenkins/workspace/WQ/target/maven-web-application.war \
+                    "http://13.235.243.213:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            notifyBuild(currentBuild.result)  // SUCCESS or FAILURE after pipeline ends
+        }
+    }
+}
+
+def notifyBuild(String buildStatus = 'STARTED') {
+
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    def colorCode = '#FF0000'
+    if (buildStatus == 'STARTED')   colorCode = '#FFFF00'
+    if (buildStatus == 'SUCCESS')   colorCode = '#00FF00'
+
+    def summary = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+
+    slackSend(color: colorCode, message: summary, channel: '#jo')
+}
