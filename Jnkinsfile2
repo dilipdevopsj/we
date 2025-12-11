@@ -51,7 +51,7 @@ pipeline {
                     fi
                     curl -v -u sai:dd \
                         --upload-file \$WAR_FILE \
-                        "http://35.154.11.60:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                        "http://13.233.164.34:8080/manager/text/deploy?path=/maven-web-application&update=true"
                 """
             }
         }
