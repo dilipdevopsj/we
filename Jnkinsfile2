@@ -27,11 +27,11 @@ pipeline {
             }
         }
 
-        stage('SonarQube') {
+        /* stage('SonarQube') {
             steps {
                 sh "mvn sonar:sonar"
             }
-        }
+        } */
 
         stage('Nexus Deploy') {
             steps {
