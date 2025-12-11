@@ -15,7 +15,7 @@ pipeline {
 
         stage('Checkout') { 
             steps {
-                git branch: 'dev', 
+                git branch: 'scm', 
                     credentialsId: '047e0051-21a4-419a-8217-f8c646580ad9',
                     url: 'https://github.com/dilipdevopsj/we.git'
             }
