@@ -27,11 +27,11 @@ pipeline {
             }
         }
 
-        /* stage('SonarQube') {
+        stage('SonarQube') {
             steps {
                 sh "mvn sonar:sonar"
             }
-        } */
+        }
 
         stage('Nexus Deploy') {
             steps {
@@ -43,15 +43,9 @@ pipeline {
             steps {
                 echo "Deploying WAR file using curl..."
                 sh """
-                    set -e
-                    WAR_FILE=/var/lib/jenkins/workspace/WQ/target/maven-web-application.war
-                    if [ ! -f \$WAR_FILE ]; then
-                        echo "WAR file not found!"
-                        exit 1
-                    fi
-                    curl -v -u sai:dd \
-                        --upload-file \$WAR_FILE \
-                        "http://35.154.11.60:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                    curl -u sai:dd \
+                    --upload-file /var/lib/jenkins/workspace/WQ/target/maven-web-application.war \
+                    "http://13.235.243.213:8080/manager/text/deploy?path=/maven-web-application&update=true"
                 """
             }
         }
