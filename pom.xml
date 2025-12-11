@@ -104,7 +104,7 @@
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>KK FUNDA Snapshot Nexus Repository </name>
-	      <url>http://13.201.100.81:8081/repository/job/</url>
+	      <url>http://13.233.120.189:8081/repository/job/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
