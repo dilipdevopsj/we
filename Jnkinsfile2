@@ -45,7 +45,7 @@ pipeline {
                 sh """
                     curl -u sai:dd \
                     --upload-file /var/lib/jenkins/workspace/WQ/target/maven-web-application.war \
-                    "http://35.154.11.60:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                    "http://13.233.164.34:8080/manager/text/deploy?path=/maven-web-application&update=true"
                 """
             }
         }
